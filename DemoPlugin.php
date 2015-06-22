@@ -13,7 +13,6 @@ Domain Path: /languages/
 class DemoPlugin {
 
   public function __construct() {
-
     load_plugin_textdomain('duikb00t-Demo-Plugin', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
     add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_styles' ) );
@@ -28,7 +27,14 @@ class DemoPlugin {
   }
 
   public function register_plugin_scripts() {
-    wp_register_script('DemoPlugin', plugins_url ('DemoPlugin/js/app.js'));
+    wp_deregister_script( 'jquery' );
+
+    wp_register_script( 'bootstrap-js', ( 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js' ), false, null, true );
+    wp_register_script( 'jquery', ( 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js' ), false, null, true );
+    wp_register_script('DemoPlugin', plugins_url ('DemoPlugin/js/app.js'), false, null, true);
+
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('bootstrap-js');
     wp_enqueue_script('DemoPlugin');
   }
 
