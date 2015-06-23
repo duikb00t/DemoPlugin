@@ -14,10 +14,6 @@ class DemoPlugin {
 
   public function __construct() {
 
-    if ( is_admin() ) {
-			add_action( 'wp_ajax_nopriv_ajax-example', array( &$this, 'ajax_call' ) );
-			add_action( 'wp_ajax_ajax-example', array( &$this, 'ajax_call' ) );
-		}
 
     /** Initialize ajax **/
     add_action( 'init', array( &$this, 'init' ) );
@@ -31,6 +27,12 @@ class DemoPlugin {
 
     /** Generate Shortcode **/
     add_shortcode( 'location_finder', array( $this, 'generate_form' ) );
+
+    /** AJAX **/
+    if ( is_admin() ) {
+      add_action( 'wp_ajax_nopriv_ajax-example', array( &$this, 'ajax_call' ) );
+      add_action( 'wp_ajax_ajax-example', array( &$this, 'ajax_call' ) );
+    }
   }
 
   public function init() {
@@ -63,21 +65,17 @@ class DemoPlugin {
     return $content;
   }
 
-  public function get_local_weather() {
-    echo 'test';
-  }
-
   public function ajax_call()
-	{
-		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], 'ajax-example-nonce' ) )
-			die ( 'Invalid Nonce' );
-		header( "Content-Type: application/json" );
-		echo json_encode( array(
-			'success' => true,
-			'time' => time()
-		) );
-		exit;
-	}
+  {
+    if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( $_REQUEST['nonce'], 'ajax-example-nonce' ) )
+    die ( 'Invalid Nonce' );
+    header( "Content-Type: application/json" );
+    echo json_encode( array(
+      'success' => true,
+      'time' => time()
+    ));
+    exit;
+  }
 
   public function fetch_html_content( $file ) {
     ob_start();
