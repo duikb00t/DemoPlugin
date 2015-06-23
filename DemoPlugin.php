@@ -13,8 +13,13 @@ Domain Path: /languages/
 class DemoPlugin {
 
   public function __construct() {
+    /** Initialize ajax **/
+    add_action( 'init', array( &$this, 'init' ) );
+
+    /** Setup Text Domain **/
     load_plugin_textdomain('duikb00t-Demo-Plugin', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
+    /** Register Plugin Styles & Scripts */
     add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_styles' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_scripts' ) );
 
@@ -22,7 +27,16 @@ class DemoPlugin {
     add_action( 'wp_ajax_get_local_weather', 'get_local_weather' );
     add_action( 'wp_ajax_nopriv_get_local_weather', 'get_local_weather' );
 
+    /** Generate Shortcode **/
     add_shortcode( 'location_finder', array( $this, 'generate_form' ) );
+  }
+
+  public function init() {
+    wp_enqueue_script( 'ajax-example', plugin_dir_url( __FILE__ ) . 'js/ajax.js', array( 'jquery' ) );
+  	wp_localize_script( 'ajax-example', 'AjaxExample', array(
+  		'ajaxurl' => admin_url( 'admin-ajax.php' ),
+  		'nonce' => wp_create_nonce( 'ajax-example-nonce' )
+  	));
   }
 
   public function register_plugin_styles() {
