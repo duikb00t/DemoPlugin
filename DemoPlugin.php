@@ -18,6 +18,10 @@ class DemoPlugin {
     add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_styles' ) );
     add_action( 'wp_enqueue_scripts', array( $this, 'register_plugin_scripts' ) );
 
+    /** Add Ajax Hooks **/
+    add_action( 'wp_ajax_get_local_weather', 'get_local_weather' );
+    add_action( 'wp_ajax_nopriv_get_local_weather', 'get_local_weather' );
+
     add_shortcode( 'location_finder', array( $this, 'generate_form' ) );
   }
 
@@ -31,7 +35,7 @@ class DemoPlugin {
 
     wp_register_script( 'bootstrap-js', ( 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js' ), false, null, true );
     wp_register_script( 'jquery', ( 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js' ), false, null, true );
-    wp_register_script('DemoPlugin', plugins_url ('DemoPlugin/js/app.js'), false, null, true);
+    wp_register_script( 'DemoPlugin', plugins_url ( 'DemoPlugin/js/app.js' ), false, null, true);
 
     wp_enqueue_script('jquery');
     wp_enqueue_script('bootstrap-js');
@@ -41,6 +45,10 @@ class DemoPlugin {
   public function generate_form( $content ) {
     $content = $this->fetch_html_content( dirname( __FILE__ ) . '/views/form.php');
     return $content;
+  }
+
+  public function get_local_weather() {
+    echo 'test';
   }
 
   public function fetch_html_content( $file ) {
